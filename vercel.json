@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "installCommand": "npm ci --prefix uplus-day1-main/app",
+  "buildCommand": "npm run build --prefix uplus-day1-main/app",
+  "outputDirectory": "uplus-day1-main/app/dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
