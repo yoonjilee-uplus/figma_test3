@@ -1,12 +1,12 @@
 {
-  "at": "2026-10-14T04:49:21.752Z",
+  "at": "2026-10-14T05:02:50.673Z",
   "screen": null,
   "pass": true,
   "gates": [
     {
-      "id": "G2",
+      "id": "G7",
       "pass": true,
-      "back": "pages",
+      "back": "screens",
       "issues": []
     }
   ]

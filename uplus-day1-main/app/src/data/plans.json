@@ -1,0 +1,46 @@
+[
+  {
+    "id": "p01",
+    "name": "슬림 10GB",
+    "monthly_price": 39000,
+    "data": "10GB",
+    "throttle_after": "1Mbps",
+    "price_after_discount": null,
+    "discount_months": null,
+    "description": "출퇴근 영상 시청이 적은 고객용 기본 요금제",
+    "recommended": false
+  },
+  {
+    "id": "p02",
+    "name": "데일리 50GB",
+    "monthly_price": 52000,
+    "data": "50GB",
+    "throttle_after": "1Mbps",
+    "price_after_discount": null,
+    "discount_months": null,
+    "description": "출퇴근길 영상을 월말까지 보고 싶은 고객용",
+    "recommended": true
+  },
+  {
+    "id": "p03",
+    "name": "무제한 라이트",
+    "monthly_price": 59000,
+    "data": "기본 100GB",
+    "throttle_after": "5Mbps",
+    "price_after_discount": 69000,
+    "discount_months": 24,
+    "description": "이름은 무제한이지만 기본 데이터 소진 후 속도가 제한됨",
+    "recommended": false
+  },
+  {
+    "id": "p04",
+    "name": "무제한 프리",
+    "monthly_price": 75000,
+    "data": "무제한",
+    "throttle_after": null,
+    "price_after_discount": null,
+    "discount_months": null,
+    "description": "데이터를 다 써도 속도 제한이 없는 요금제",
+    "recommended": false
+  }
+]
