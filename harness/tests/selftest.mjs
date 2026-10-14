@@ -202,7 +202,7 @@ t('state', '2단계가 안 끝났으면 approve 거부', 'pass', () => fs.rmSync
 })
 
 // ---- scaffold ----
-t('scaffold', '기본 설정이면 키트 의존성 포함', 'pass', null, () => {
+t('scaffold', 'componentKit이 있으면 키트 의존성 포함', 'pass', () => editJ(T('harness', 'config.json'), (c) => { c.componentKit = { package: '@make-kits/lg', version: '1.0.1' } }), () => {
   run('scripts/scaffold-app.mjs')
   const pkg = readJ(T(cfg.appDir, 'package.json'))
   return { code: pkg.dependencies['@make-kits/lg'] && pkg.scripts.lint === 'tsc --noEmit' ? 0 : 1, out: JSON.stringify(pkg) }

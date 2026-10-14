@@ -5,7 +5,7 @@
   "referenceApp": "{referenceDir}/make-export",
   "outDir": "harness/out",
   "maxRetries": 3,
-  "componentKit": { "package": "@make-kits/lg", "version": "1.0.1" },
+  "componentKit": null,
   "app": {
     "plans": "src/data/plans.json",
     "display": "src/lib/display.js",

@@ -1,13 +1,17 @@
 {
   "stages": {
     "spec": true,
-    "pages": true
+    "pages": true,
+    "tokens": true
   },
   "screens": {},
-  "approvals": {},
+  "approvals": {
+    "pages": true
+  },
   "retries": {
     "spec": 0,
-    "pages": 0
+    "pages": 0,
+    "tokens": 0
   },
   "history": [
     {
@@ -17,7 +21,15 @@
     {
       "at": "2026-10-14T04:49:06.502Z",
       "note": "done pages"
+    },
+    {
+      "at": "2026-10-14T04:50:05.637Z",
+      "note": "approve pages"
+    },
+    {
+      "at": "2026-10-14T04:59:10.183Z",
+      "note": "done tokens"
     }
   ],
-  "updatedAt": "2026-10-14T04:49:06.505Z"
+  "updatedAt": "2026-10-14T04:59:10.186Z"
 }

@@ -1,0 +1,194 @@
+/* 자동 생성 파일 — 직접 수정 금지.
+ * 원본: uplus-day1-main/docs/tokens.json
+ * 생성: node harness/scripts/build-tokens.mjs
+ */
+
+:root {
+  --color-text-primary: #181A1B;
+  --color-text-secondary: #66707A;
+  --color-text-tertiary: #878787;
+  --color-text-on-dark: #FFFFFF;
+  --color-text-accent: #FF2E98;
+  --color-text-error: #E30036;
+  --color-text-placeholder: #B7BDC4;
+  --color-text-on-disabled: #66707A;
+  --color-bg-surface: #FFFFFF;
+  --color-bg-default: #F7F7F7;
+  --color-bg-subtle: #EFF1F3;
+  --color-bg-inverse: #2D2D2D;
+  --color-bg-accent-subtle: #FFF5FA;
+  --color-bg-error-subtle: #FFF0F3;
+  --color-border-default: #D9DCDF;
+  --color-border-subtle: #EFF1F3;
+  --color-border-strong: #181A1B;
+  --color-border-divider: #0000001A;
+  --color-border-focus: #FF2E98;
+  --color-border-error: #E30036;
+  --color-fill-primary: #FF2E98;
+  --color-fill-secondary: #181A1B;
+  --color-fill-tertiary: #EFF1F3;
+  --color-fill-disabled: #D9DCDF;
+  --color-fill-disabled-strong: #B7BDC4;
+  --color-fill-primary-hover: #E6007E;
+  --color-icon-default: #66707A;
+  --color-icon-strong: #181A1B;
+  --color-border-medium: #66707A;
+  --color-surface-default: #FFFFFF;
+  --color-icon-accent: #FF2E98;
+  --color-icon-on-dark: #FFFFFF;
+  --color-icon-disabled: #D9DCDF;
+  --color-icon-error: #E30036;
+  --color-icon-primary: #000000;
+  --color-brand-primary: #FF2E98;
+  --font-family-family-font: "Pretendard Variable", sans-serif;
+  --font-size-heading-h1: 32px;
+  --font-size-heading-h2: 28px;
+  --font-size-heading-h3: 24px;
+  --font-size-heading-h4: 20px;
+  --font-size-subtitle: 18px;
+  --font-size-body: 16px;
+  --font-size-body-small: 14px;
+  --font-size-caption: 13px;
+  --font-size-caption-mini: 10px;
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-80: 80px;
+  --spacing-58: 58px;
+  --spacing-390: 390px;
+  --spacing-10: 10px;
+  --radius-4: 4px;
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+  --radius-24: 24px;
+  --radius-32: 32px;
+  --radius-full: 9999px;
+}
+
+.ts-heading-h1 {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-heading-h1);
+  line-height: 44px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.ts-heading-h2 {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-heading-h2);
+  line-height: 40px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.ts-heading-h3 {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-heading-h3);
+  line-height: 32px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.ts-heading-h4 {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-heading-h4);
+  line-height: 28px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.ts-subtitle-bold {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-subtitle);
+  line-height: 26px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.ts-subtitle-default {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-subtitle);
+  line-height: 26px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.ts-body-strong {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-body);
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.ts-body-medium {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-body);
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.ts-body-small-strong {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-body-small);
+  line-height: 21px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.ts-body-small-medium {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-body-small);
+  line-height: 21px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.ts-caption-bold {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-caption);
+  line-height: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.ts-caption-medium {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-caption);
+  line-height: 18px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.ts-caption-small-bold {
+  font-family: var(--font-family-family-font);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.ts-caption-small {
+  font-family: var(--font-family-family-font);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.ts-caption-mini {
+  font-family: var(--font-family-family-font);
+  font-size: var(--font-size-caption-mini);
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
