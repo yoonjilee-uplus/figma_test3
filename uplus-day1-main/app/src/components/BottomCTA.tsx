@@ -4,11 +4,14 @@ type BottomCTAProps = {
   Layout?: "single" | "double" | "price";
   AmountLabel?: string;
   Amount?: string;
+  // 버튼 위에 표시하는 안내 문구(예: 저장 실패)
+  Notice?: string | null;
   children: ReactNode;
 };
 
-// BottomCTA: Layout = single | double | price. price는 요약 값과 핵심 액션을 함께 둔다.
-export default function BottomCTA({ Layout = "single", AmountLabel, Amount, children }: BottomCTAProps) {
+// BottomCTA: Layout = single | double | price.
+// double은 보조+핵심 액션을 가로로 나란히 둔다. price는 요약 값과 핵심 액션을 함께 둔다.
+export default function BottomCTA({ Layout = "single", AmountLabel, Amount, Notice, children }: BottomCTAProps) {
   return (
     <div
       className="flex flex-col w-full"
@@ -32,7 +35,15 @@ export default function BottomCTA({ Layout = "single", AmountLabel, Amount, chil
           </span>
         </div>
       ) : null}
-      <div className="flex flex-col" style={{ gap: "var(--spacing-8)" }}>
+      {Notice ? (
+        <p role="alert" className="ts-caption-medium" style={{ color: "var(--color-text-error)" }}>
+          {Notice}
+        </p>
+      ) : null}
+      <div
+        className={Layout === "double" ? "flex" : "flex flex-col"}
+        style={{ gap: "var(--spacing-8)" }}
+      >
         {children}
       </div>
     </div>

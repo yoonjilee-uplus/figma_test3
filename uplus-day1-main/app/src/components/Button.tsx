@@ -4,6 +4,7 @@ type ButtonProps = {
   Size?: "sm" | "lg" | "xl";
   State?: "Default" | "Hover" | "Disabled";
   onClick?: () => void;
+  fullWidth?: boolean;
 };
 
 // Button: Type = Primary | Secondary, Size = sm | lg | xl, State = Default | Hover | Disabled
@@ -13,6 +14,7 @@ export default function Button({
   Size = "lg",
   State = "Default",
   onClick,
+  fullWidth = false,
 }: ButtonProps) {
   const disabled = State === "Disabled";
   const primary = Type === "Primary";
@@ -32,7 +34,7 @@ export default function Button({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={(Size === "sm" ? "ts-body-small-strong" : "ts-body-strong") + " flex items-center justify-center"}
+      className={(Size === "sm" ? "ts-body-small-strong" : "ts-body-strong") + " flex items-center justify-center" + (fullWidth ? " w-full" : "")}
       style={{
         minHeight,
         paddingLeft: "var(--spacing-16)",
