@@ -1,0 +1,50 @@
+{
+  "skill_name": "beginner-code-comments",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "react-app-tsx",
+      "prompt": "<경로>/App.tsx 에 초보자도 이해할 수 있게 설명 주석 달아줘",
+      "expected_output": "App.tsx에 한국어 설명 주석이 추가되고 코드 로직은 그대로 유지. JSX 내부는 {/* */} 문법 사용.",
+      "files": ["uplus-day1-main/reference/make-export/src/App.tsx"],
+      "assertions": [
+        "code-unchanged: 원본의 모든 코드 줄이 순서대로 그대로 남아 있고, 추가된 줄은 전부 주석/빈 줄이다 (check_only_comments.ps1)",
+        "header-summary: 파일 맨 위에 파일 역할과 전체 흐름을 설명하는 요약 주석이 있다",
+        "korean-friendly-tone: 주석이 쉬운 한국어로 쓰였고 '무엇'뿐 아니라 '왜'를 설명한다",
+        "jargon-explained: useState/useEffect, props, 구조분해, map 등 React/JS 핵심 개념을 처음 등장할 때 풀어서 설명한다",
+        "jsx-comment-syntax: JSX 태그 내부에는 // 가 아닌 {/* */} 주석만 쓰였다",
+        "backup-or-recoverable: 원본 백업(.bak)이 생성되었다",
+        "user-report: 최종 안내에 수정 파일과 어려운 부분(줄 번호 포함)이 언급된다"
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "python-order-stats",
+      "prompt": "이 파이썬 파일 너무 어려워요. <경로>/order_stats.py 에 코딩 처음 배우는 사람도 이해할 수 있게 주석 좀 달아주세요",
+      "expected_output": "데코레이터, dataclass, 제너레이터(yield), 바다코끼리 연산자(:=), 정규식, lambda 정렬 키 등을 초보자 눈높이로 설명하는 주석. 코드 불변.",
+      "files": ["beginner-code-comments-workspace/inputs/order_stats.py"],
+      "assertions": [
+        "code-unchanged: 원본의 모든 코드 줄이 순서대로 그대로 남아 있고, 추가된 줄은 전부 주석/빈 줄이다 (check_only_comments.ps1)",
+        "header-summary: 파일 맨 위에 파일 역할과 전체 흐름을 설명하는 요약 주석이 있다",
+        "korean-friendly-tone: 주석이 쉬운 한국어로 쓰였고 '무엇'뿐 아니라 '왜'를 설명한다",
+        "jargon-explained: 데코레이터, dataclass, yield, :=, 정규식, lambda 가 각각 설명된다",
+        "regex-example: 정규식이 어떤 줄을 매칭하는지 예시 입력 줄을 보여준다",
+        "backup-or-recoverable: 원본 백업(.bak)이 생성되었다",
+        "user-report: 최종 안내에 수정 파일과 어려운 부분(줄 번호 포함)이 언급된다"
+      ]
+    },
+    {
+      "id": 3,
+      "eval_name": "json-tokens-edgecase",
+      "prompt": "<경로>/tokens.json 파일에 초보자용 설명 주석 달아줘",
+      "expected_output": "JSON은 주석을 지원하지 않으므로 파일을 그대로 두고(유효한 JSON 유지), 대화창에서 구조를 설명하며 그 이유를 알려준다.",
+      "files": ["uplus-day1-main/docs/tokens.json"],
+      "assertions": [
+        "json-still-valid: tokens.json 이 여전히 유효한 JSON이다",
+        "json-untouched: tokens.json 내용이 원본과 동일하다",
+        "explains-why-no-comments: JSON은 주석을 지원하지 않는다는 이유를 사용자에게 알린다",
+        "explanation-provided: 파일 구조(meta, collections, tokens 등)를 초보자 눈높이로 설명한다"
+      ]
+    }
+  ]
+}

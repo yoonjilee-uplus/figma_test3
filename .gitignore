@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+*.bak
+
+# ZIP으로 받아 실제 폰트 대신 Git LFS 포인터만 남은 파일
+uplus-day1-main/reference/make-export/public/fonts/Pretendard-Bold.woff2
+
+# 스킬 테스트용 작업 폴더 (저장소에 올리지 않음)
+beginner-code-comments-workspace/
