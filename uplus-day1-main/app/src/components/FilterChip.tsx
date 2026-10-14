@@ -12,7 +12,7 @@ export default function FilterChip({ Label, State = "default", onClick }: Filter
       type="button"
       onClick={onClick}
       aria-pressed={selected}
-      className={(selected ? "ts-body-small-strong" : "ts-body-small-medium") + " flex items-center justify-center"}
+      className={(selected ? "ts-body-small-strong" : "ts-body-small-medium") + " flex items-center justify-center shrink-0 whitespace-nowrap"}
       style={{
         minHeight: "var(--spacing-40)",
         paddingLeft: "var(--spacing-16)",

@@ -1,20 +1,8 @@
 {
-  "at": "2026-10-14T05:08:54.456Z",
-  "screen": null,
+  "at": "2026-10-14T05:35:48.454Z",
+  "screen": "/plans",
   "pass": true,
   "gates": [
-    {
-      "id": "G1",
-      "pass": true,
-      "back": "spec",
-      "issues": []
-    },
-    {
-      "id": "G2",
-      "pass": true,
-      "back": "pages",
-      "issues": []
-    },
     {
       "id": "G3",
       "pass": true,
@@ -35,12 +23,6 @@
     },
     {
       "id": "G6",
-      "pass": true,
-      "back": "screens",
-      "issues": []
-    },
-    {
-      "id": "G7",
       "pass": true,
       "back": "screens",
       "issues": []
