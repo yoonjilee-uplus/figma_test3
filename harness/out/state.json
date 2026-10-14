@@ -3,12 +3,13 @@
     "spec": true,
     "pages": true,
     "tokens": true,
-    "screens": false
+    "screens": true
   },
   "screens": {
     "/plans": "done",
     "/plans/[id]": "done",
-    "/apply": "done"
+    "/apply": "done",
+    "/complete": "done"
   },
   "approvals": {
     "pages": true
@@ -19,7 +20,8 @@
     "tokens": 0,
     "/plans": 0,
     "/plans/[id]": 0,
-    "/apply": 0
+    "/apply": 0,
+    "/complete": 0
   },
   "history": [
     {
@@ -53,7 +55,11 @@
     {
       "at": "2026-10-14T05:06:43.173Z",
       "note": "done screens /apply"
+    },
+    {
+      "at": "2026-10-14T05:07:51.195Z",
+      "note": "done screens /complete"
     }
   ],
-  "updatedAt": "2026-10-14T05:06:43.176Z"
+  "updatedAt": "2026-10-14T05:07:51.197Z"
 }
