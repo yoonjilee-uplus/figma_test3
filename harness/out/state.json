@@ -1,0 +1,17 @@
+{
+  "stages": {
+    "spec": true
+  },
+  "screens": {},
+  "approvals": {},
+  "retries": {
+    "spec": 0
+  },
+  "history": [
+    {
+      "at": "2026-10-14T04:42:33.393Z",
+      "note": "done spec"
+    }
+  ],
+  "updatedAt": "2026-10-14T04:42:33.397Z"
+}
