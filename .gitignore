@@ -7,3 +7,7 @@ uplus-day1-main/reference/make-export/public/fonts/Pretendard-Bold.woff2
 
 # 스킬 테스트용 작업 폴더 (저장소에 올리지 않음)
 beginner-code-comments-workspace/
+
+# 환경변수 (Supabase 키 등) — 저장소에 올리지 않음
+.env
+.env*.local

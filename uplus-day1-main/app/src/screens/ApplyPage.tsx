@@ -7,17 +7,16 @@ import Checkbox from "../components/Checkbox";
 import BottomCTA from "../components/BottomCTA";
 import Button from "../components/Button";
 import { navigate, useLocation } from "../lib/router";
-import { formatPrice, formatAfterDiscount, makeSubscriptionId } from "../lib/display.js";
+import { formatPrice, formatAfterDiscount } from "../lib/display.js";
 import { canSubmit, isValidName, isValidPhone, normalizePhone } from "../lib/validate.js";
-
-const STORAGE_KEY = "subscriptions";
+import { saveSubscription, SaveError } from "../lib/subscriptions";
 
 const MSG_NAME = "이름을 입력해 주세요.";
 const MSG_PHONE = "휴대폰 번호는 010으로 시작하는 숫자 11자리로 입력해 주세요.";
 const MSG_AGREE = "개인정보 수집·이용에 동의해야 신청할 수 있어요.";
 const MSG_SAVE = "신청을 저장하지 못했어요. 다시 시도해 주세요.";
 const AGREE_TEXT =
-  "[필수] 개인정보 수집·이용에 동의합니다. 수집 항목: 이름, 휴대폰 번호 / 이용 목적: 구독 신청 접수와 신청 내역 표시 / 보관 기간: 브라우저 탭을 닫을 때까지(탭을 닫으면 삭제)";
+  "[필수] 개인정보 수집·이용에 동의합니다. 수집 항목: 이름, 휴대폰 번호 / 이용 목적: 구독 신청 접수·처리와 신청 내역 표시 / 보관 기간: [보관 기간 — 결정 필요] / 처리 위탁: Supabase(데이터 저장) (동의를 거부할 수 있으며, 거부하면 신청할 수 없습니다.)";
 
 export default function ApplyPage() {
   const loc = useLocation();
@@ -33,6 +32,7 @@ export default function ApplyPage() {
   const [agreeError, setAgreeError] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
+  const [lastId, setLastId] = useState<string | null>(null);
   const savingRef = useRef(false);
 
   // 잘못된 plan: /plans로 교체 이동
@@ -50,31 +50,25 @@ export default function ApplyPage() {
 
   const submitEnabled = canSubmit({ name, phone, agreed }) && !saving;
 
-  function submit() {
+  async function submit() {
     if (!plan || savingRef.current || !canSubmit({ name, phone, agreed })) return;
     savingRef.current = true;
     setSaving(true);
     setSaveError(false);
     try {
-      const raw = window.sessionStorage.getItem(STORAGE_KEY);
-      const list: { id: string }[] = raw ? JSON.parse(raw) : [];
-      const now = new Date();
-      const id = makeSubscriptionId(
-        now,
-        list.map((s) => s.id),
+      const id = await saveSubscription(
+        {
+          name: name.trim(),
+          phone: normalizePhone(phone),
+          plan_id: plan.id,
+          plan_name: plan.name,
+          monthly_price: plan.monthly_price,
+        },
+        lastId ?? undefined,
       );
-      list.push({
-        id,
-        name: name.trim(),
-        phone: normalizePhone(phone),
-        plan_id: plan.id,
-        monthly_price: plan.monthly_price,
-        agreed_privacy: true,
-        created_at: now.toISOString(),
-      } as { id: string });
-      window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(list));
       navigate("/complete?id=" + id, true);
-    } catch {
+    } catch (e) {
+      setLastId(e instanceof SaveError ? e.lastId : null);
       savingRef.current = false;
       setSaving(false);
       setSaveError(true);
@@ -166,7 +160,7 @@ export default function ApplyPage() {
           <Button
             Type="Primary"
             Size="xl"
-            Label="신청하기"
+            Label={saving ? "신청 중..." : "신청하기"}
             fullWidth
             State={submitEnabled ? "Default" : "Disabled"}
             onClick={submit}

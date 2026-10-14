@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import plans from "../data/plans.json";
+import { useCallback, useEffect, useState } from "react";
 import Header from "../components/Header";
 import IconDoneMark from "../components/IconDoneMark";
 import ListRow from "../components/ListRow";
@@ -7,39 +6,46 @@ import BottomCTA from "../components/BottomCTA";
 import Button from "../components/Button";
 import { navigate, useLocation } from "../lib/router";
 import { formatPrice, formatDateTime } from "../lib/display.js";
+import { getSubscription, type SubscriptionRow } from "../lib/subscriptions";
 
-type Subscription = {
-  id: string;
-  name: string;
-  plan_id: string;
-  monthly_price: number;
-  created_at: string;
-};
-
-function findSubscription(id: string | null): Subscription | null {
-  if (!id) return null;
-  try {
-    const raw = window.sessionStorage.getItem("subscriptions");
-    const list: Subscription[] = raw ? JSON.parse(raw) : [];
-    return list.find((s) => s.id === id) ?? null;
-  } catch {
-    return null;
-  }
-}
+const ID_PATTERN = /^S\d{10}$/;
+const MSG_LOAD = "신청 내역을 불러오지 못했어요. 다시 시도해 주세요.";
 
 export default function CompletePage() {
   const loc = useLocation();
   const id = new URLSearchParams(loc.split("?")[1] ?? "").get("id");
-  const sub = findSubscription(id);
-  const plan = sub ? plans.find((p) => p.id === sub.plan_id) : undefined;
-  const valid = Boolean(sub && plan);
+  const validId = id !== null && ID_PATTERN.test(id);
+  const [sub, setSub] = useState<SubscriptionRow | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
-  // 신청 번호가 없거나 저장된 Subscription에 없으면 /plans로 교체 이동
+  const load = useCallback(() => {
+    setFailed(false);
+    setAttempt((n) => n + 1);
+  }, []);
+
   useEffect(() => {
-    if (!valid) navigate("/plans", true);
-  }, [valid]);
+    if (!validId || id === null) {
+      navigate("/plans", true);
+      return;
+    }
+    let cancelled = false;
+    setSub(null);
+    getSubscription(id)
+      .then((row) => {
+        if (cancelled) return;
+        if (row === null) navigate("/plans", true);
+        else setSub(row);
+      })
+      .catch(() => {
+        if (!cancelled) setFailed(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [id, validId, attempt]);
 
-  if (!sub || !plan) return null;
+  if (!validId) return null;
 
   return (
     <div
@@ -70,12 +76,25 @@ export default function CompletePage() {
               backgroundColor: "var(--color-bg-surface)",
             }}
           >
-            <ListRow Type="default" Label="신청 번호" Value={sub.id} />
-            <ListRow Type="default" Label="요금제" Value={plan.name} />
-            <ListRow Type="default" Label="월 요금" Value={formatPrice(sub.monthly_price)} />
-            <ListRow Type="default" Label="신청 일시" Value={formatDateTime(new Date(sub.created_at))} />
-            <ListRow Type="default" Label="신청자" Value={sub.name} />
+            {sub && (
+              <>
+                <ListRow Type="default" Label="신청 번호" Value={sub.id} />
+                <ListRow Type="default" Label="요금제" Value={sub.plan_name} />
+                <ListRow Type="default" Label="월 요금" Value={formatPrice(sub.monthly_price)} />
+                <ListRow Type="default" Label="신청 일시" Value={formatDateTime(new Date(sub.created_at))} />
+                <ListRow Type="default" Label="신청자" Value={sub.name} />
+              </>
+            )}
           </section>
+
+          {failed && (
+            <div className="flex flex-col items-center" style={{ gap: "var(--spacing-12)" }}>
+              <p role="alert" className="ts-caption-medium" style={{ color: "var(--color-text-error)" }}>
+                {MSG_LOAD}
+              </p>
+              <Button Type="Secondary" Size="lg" Label="다시 시도" onClick={load} />
+            </div>
+          )}
         </main>
 
         <BottomCTA Layout="single">
