@@ -42,7 +42,7 @@ export default function PlansPage() {
           <div
             role="group"
             aria-label="요금제 필터"
-            className="flex overflow-x-auto"
+            className="flex"
             style={{ gap: "var(--spacing-8)" }}
           >
             {FILTERS.map((f) => (
