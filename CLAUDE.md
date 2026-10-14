@@ -40,7 +40,7 @@
 - `state.mjs fail`이 종료 코드 3(STOP)을 내면 **멈추고** 사람에게 보고한다. 보고는 실패 게이트마다 "무엇이 / 어디서 / 어떻게 고칠지" 한 줄씩.
 
 ## 게이트 (`node harness/scripts/run-gates.mjs <ID...|all> [--screen <route>]`)
-- G1 spec: routes 수 = PRD "화면 구조" 표 행 수, 요금제 필드 = PRD Plan 블록 필드, rules에 A·B, 신청 검증 사례 8개 이상
+- G1 spec: routes 수 = PRD "화면 구조" 표 행 수, 요금제 필드 = PRD Plan 블록 필드, 요금제 값 = PRD "요금제 데이터" 표(금액·속도·문구·추천), rules에 A·B, 신청 검증 사례 8개 이상 + 기대값 = PRD 입력 규칙 + 필수 유형 7가지
 - G2 pages: screens 수 = routes 수, 컴포넌트가 Design.md 4장 목록 안, 화면 파일 경로 규칙, 규칙 표시
 - G3 routes: 사람 승인 기록, 라우터 `path:` 등록 = routes, 화면 파일 존재
 - G4 token-only (훅에서도 실행): `APP/src` 안 토큰 밖 값 0건

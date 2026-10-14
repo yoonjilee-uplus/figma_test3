@@ -37,17 +37,123 @@ function prdRoutes() {
   return [...block.matchAll(/^\|[^|\n]*\|[^|\n]*\|\s*`([^`]+)`\s*\|/gm)].map((m) => m[1])
 }
 
-function prdPlanFields() {
+// PRD 5장 Plan 블록: [{ field, comment }]
+function prdPlanBlock() {
   const lines = readText(`${cfg.docsDir}/PRD.md`).split(/\r?\n/)
   const i = lines.findIndex((l) => /^Plan:/.test(l))
   if (i < 0) return []
   const fields = []
   for (let j = i + 1; j < lines.length; j++) {
-    const m = lines[j].match(/^\s{2,}(\w+):/)
+    const m = lines[j].match(/^\s{2,}(\w+):[^#]*(?:#\s*(.*))?$/)
     if (!m) break
-    fields.push(m[1])
+    fields.push({ field: m[1], comment: m[2] ?? '' })
   }
   return fields
+}
+const prdPlanFields = () => prdPlanBlock().map((f) => f.field)
+
+// PRD "요금제 데이터" 표: id(첫 열) → 칸 목록. 표가 없으면 null
+function prdPlanRows() {
+  const text = readText(`${cfg.docsDir}/PRD.md`)
+  const start = text.indexOf('### 요금제 데이터')
+  if (start < 0) return null
+  const after = text.slice(start + 1)
+  const end = after.search(/\n#{2,3} /)
+  const block = end < 0 ? after : after.slice(0, end)
+  const lines = block.split(/\r?\n/).filter((l) => /^\|/.test(l) && !/^\|[\s:|-]+\|?\s*$/.test(l)).slice(1) // 머리글 행 제외
+  const rows = new Map()
+  for (const l of lines) {
+    const cells = l.split('|').slice(1, -1).map((c) => c.trim())
+    rows.set(cells[0], cells)
+  }
+  return rows
+}
+
+// PRD 4-3 "입력 규칙" 문장에서 이름 길이·번호 접두사·자릿수를 읽는다. 못 찾으면 null
+function prdApplyRule() {
+  const line = readText(`${cfg.docsDir}/PRD.md`).split(/\r?\n/).find((l) => l.includes('입력 규칙:'))
+  const name = line?.match(/이름은[^.]*?(\d+)~(\d+)자/)
+  const phone = line?.match(/(\d+)으로 시작하는 (\d+)자리/)
+  if (!name || !phone) return null
+  return { min: +name[1], max: +name[2], prefix: phone[1], len: +phone[2] }
+}
+
+// 요금제 값이 PRD 표·Plan 블록과 같은지 (필드 이름만이 아니라 값까지)
+function checkPlanValues(g, spec) {
+  const PRD = `${cfg.docsDir}/PRD.md`
+  const rows = prdPlanRows()
+  if (!rows?.size) return add(g, 'PRD "요금제 데이터" 표를 찾지 못함', PRD, 'PRD 4장에 ### 요금제 데이터 표를 두고 첫 열을 id로 한다')
+  const plans = spec.plans ?? []
+  const ids = plans.map((p) => p.id)
+  for (const id of [...rows.keys()].filter((x) => !ids.includes(x))) add(g, `요금제 ${id} 누락`, P.spec, 'PRD 요금제 데이터 표의 행마다 plans 1개')
+  for (const id of ids.filter((x) => !rows.has(x))) add(g, `PRD 표에 없는 요금제 ${id}`, P.spec, 'plans에서 지운다')
+
+  const rules = spec.rules ?? []
+  const priceFields = rules.find((r) => r.kind === 'price-fields')?.allowedPriceFields ?? []
+  const speedField = rules.find((r) => r.kind === 'throttle-text')?.field
+  const unit = plans.map((p) => String(p[speedField] ?? '').match(/^[\d.]+(\D+)$/)?.[1]).find(Boolean)
+  const num = (s) => new RegExp(`(?<![\\d,.])${esc(s)}(?![\\d,])`)
+  const sortJ = (a) => JSON.stringify([...a].sort())
+
+  for (const p of plans) {
+    const cells = rows.get(p.id)
+    if (!cells) continue
+    const row = cells.join(' | ')
+    const fix = `PRD 표 ${p.id} 행: ${row}`
+    for (const [k, v] of Object.entries(p)) {
+      if (k === 'id' || k === speedField || v == null || typeof v === 'boolean') continue // 속도는 아래에서 따로 비교
+      const ok = typeof v === 'number' ? num(v.toLocaleString('en-US')).test(row) || num(String(v)).test(row) : cells.includes(String(v)) // 문자열은 칸 전체가 같아야 함
+      if (!ok) add(g, `요금제 ${p.id}.${k} = ${JSON.stringify(v)}가 PRD 표에 없음`, P.spec, fix)
+    }
+    // 반대 방향: 표에 있는 금액·속도가 spec에서 빠지거나 null이면 안 된다
+    if (priceFields.length) {
+      const want = [...row.matchAll(/(\d{1,3}(?:,\d{3})+|\d+)원/g)].map((m) => Number(m[1].replace(/,/g, '')))
+      const got = priceFields.map((f) => p[f]).filter((v) => v != null)
+      if (sortJ(want) !== sortJ(got)) add(g, `요금제 ${p.id} 금액 [${got}] ≠ PRD 표 금액 [${want}]`, P.spec, `${priceFields.join('·')}를 표와 맞춘다 (없음은 null). ${fix}`)
+    }
+    if (speedField && unit) {
+      const want = row.match(new RegExp(`\\d+(?:\\.\\d+)?${esc(unit)}`, 'g')) ?? []
+      const got = p[speedField] == null ? [] : [String(p[speedField])]
+      if (sortJ(want) !== sortJ(got)) add(g, `요금제 ${p.id}.${speedField} ${JSON.stringify(p[speedField])} ≠ PRD 표 [${want}]`, P.spec, `제한 없음은 null. ${fix}`)
+    }
+  }
+
+  // boolean 필드: Plan 블록 주석이 "p02만 true"처럼 id를 짚으면 그 요금제만 true
+  for (const { field, comment } of prdPlanBlock()) {
+    const named = [...rows.keys()].filter((id) => num(id).test(comment))
+    if (!named.length || !/true/.test(comment) || !plans.some((p) => typeof p[field] === 'boolean')) continue
+    const got = plans.filter((p) => p[field] === true).map((p) => p.id)
+    if (sortJ(got) !== sortJ(named)) add(g, `${field}=true 요금제 [${got}] ≠ PRD [${named}]`, P.spec, `PRD Plan 블록 주석: "${comment}"`)
+  }
+}
+
+// 신청 검증 사례: 기대값이 PRD 입력 규칙과 같은지 + 필수 유형이 모두 있는지
+function checkApplyCases(g, cases) {
+  const rule = prdApplyRule()
+  if (!rule) return add(g, 'PRD 4-3 "입력 규칙"에서 이름 길이·번호 규칙을 찾지 못함', `${cfg.docsDir}/PRD.md`, '"이름은 … 1~20자", "010으로 시작하는 11자리" 형식 문장을 둔다')
+  const { min, max, prefix, len } = rule
+  const digits = (c) => String(c.phone ?? '').replace(/\D/g, '')
+  const nameOk = (c) => { const n = String(c.name ?? '').trim().length; return n >= min && n <= max }
+  const phoneOk = (c) => digits(c).length === len && digits(c).startsWith(prefix)
+  const valid = (c) => nameOk(c) && phoneOk(c) && c.agreed === true
+
+  for (const [i, c] of cases.entries()) {
+    if (typeof c.expected === 'boolean' && c.expected !== valid(c))
+      add(g, `사례 ${i + 1} 기대값 ${c.expected} ≠ PRD 입력 규칙 ${valid(c)} (${JSON.stringify(c)})`, P.spec, `이름 앞뒤 공백 제거 후 ${min}~${max}자, 번호는 숫자만 남겨 ${prefix}로 시작하는 ${len}자리, 동의 true일 때만 true`)
+  }
+
+  // 각 유형은 해당 조건 하나만 어긋나고 나머지는 정상이어야 한다 (원인을 하나로 좁히기 위해)
+  const rest = (c) => phoneOk(c) && c.agreed === true
+  const types = [
+    ['정상', (c) => valid(c) && /^\d+$/.test(String(c.phone))],
+    ['이름 공백만', (c) => String(c.name ?? '').length > 0 && !String(c.name).trim() && rest(c)],
+    [`이름 ${max + 1}자`, (c) => String(c.name ?? '').trim().length === max + 1 && rest(c)],
+    [`번호 ${len - 1}자리`, (c) => nameOk(c) && c.agreed === true && /^\d+$/.test(String(c.phone)) && digits(c).length === len - 1],
+    [`${prefix}이 아닌 접두사`, (c) => nameOk(c) && c.agreed === true && digits(c).length === len && !digits(c).startsWith(prefix)],
+    ['하이픈 포함 번호', (c) => nameOk(c) && c.agreed === true && String(c.phone).includes('-') && phoneOk(c)],
+    ['동의 안 함', (c) => nameOk(c) && phoneOk(c) && c.agreed === false],
+  ]
+  for (const [label, hit] of types) if (!cases.some(hit)) add(g, `신청 검증 사례에 "${label}" 유형 없음`, P.spec, '이 조건 하나만 어긋나고 나머지는 정상인 사례를 추가한다')
 }
 
 function designComponents() {
@@ -87,6 +193,7 @@ function G1(g) {
     if (miss.length) add(g, `요금제 ${p.id ?? i} 필드 누락: ${miss.join(', ')}`, P.spec, 'PRD 표에서 값을 옮긴다 (없음은 null)')
     if (extra.length) add(g, `요금제 ${p.id ?? i}에 PRD에 없는 필드: ${extra.join(', ')}`, P.spec, 'PRD Plan 블록에 없는 필드는 지운다')
   }
+  checkPlanValues(g, spec)
 
   const rules = spec.rules ?? []
   for (const id of ['A', 'B']) if (!rules.some((r) => r.id === id)) add(g, `어기면 안 되는 것 ${id} 규칙 없음`, P.spec, 'rules에 추가한다')
@@ -100,6 +207,7 @@ function G1(g) {
   if (cases.length < 8) add(g, `신청 검증 사례 ${cases.length}개 (8개 이상 필요)`, P.spec, 'PRD 4-3 입력 규칙으로 사례를 더 만든다')
   for (const [i, c] of cases.entries()) for (const k of ['name', 'phone', 'agreed', 'expected']) if (!(k in c)) add(g, `사례 ${i + 1}에 ${k} 없음`, P.spec, '필드를 채운다')
   if (!cases.some((c) => c.expected === true) || !cases.some((c) => c.expected === false)) add(g, '통과 사례와 실패 사례가 모두 있어야 함', P.spec, 'expected true/false 사례를 모두 넣는다')
+  checkApplyCases(g, cases)
 
   if (spec.gaps?.length) g.notes = [`PRD에 비어 있는 곳 ${spec.gaps.length}건 (spec.gaps 참고)`]
 }
