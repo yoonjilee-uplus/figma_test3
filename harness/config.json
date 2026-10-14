@@ -1,0 +1,26 @@
+{
+  "docsDir": "uplus-day1-main/docs",
+  "referenceDir": "uplus-day1-main/reference",
+  "appDir": "uplus-day1-main/app",
+  "referenceApp": "{referenceDir}/make-export",
+  "outDir": "harness/out",
+  "maxRetries": 3,
+  "componentKit": { "package": "@make-kits/lg", "version": "1.0.1" },
+  "app": {
+    "plans": "src/data/plans.json",
+    "display": "src/lib/display.js",
+    "validate": "src/lib/validate.js",
+    "routes": "src/routes.tsx",
+    "styles": "src/styles",
+    "screens": "src/screens",
+    "components": "src/components"
+  },
+  "writeScopes": {
+    "spec-writer": ["{outDir}/spec/"],
+    "page-planner": ["{outDir}/pages/"],
+    "screen-builder": ["{appDir}/src/"],
+    "prd-checker": ["{docsDir}/PRD.md"]
+  },
+  "readOnly": ["{docsDir}/", "{referenceDir}/"],
+  "generated": ["{appDir}/src/styles/", "{outDir}/tokens/", "{outDir}/report/", "{outDir}/state.json"]
+}

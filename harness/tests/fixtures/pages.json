@@ -1,0 +1,9 @@
+{
+  "screens": [
+    { "route": "/plans", "name": "요금제 목록", "file": "uplus-day1-main/app/src/screens/PlansPage.tsx", "components": ["Header", "Logo", "FilterChip", "Card/Plan", "Tag", "Chip", "Button"], "states": [], "nav": [], "rules": ["A", "B"] },
+    { "route": "/plans/[id]", "name": "요금제 상세", "file": "uplus-day1-main/app/src/screens/PlanDetailPage.tsx", "components": ["Header", "icon/arrowLeft", "Tag", "Card/Price", "List/Row", "BottomCTA", "Button"], "states": [], "nav": [], "rules": ["A", "B"] },
+    { "route": "/apply", "name": "구독 신청", "file": "uplus-day1-main/app/src/screens/ApplyPage.tsx", "components": ["Header", "icon/arrowLeft", "List/Row", "Input", "Checkbox", "BottomCTA", "Button"], "states": [], "nav": [], "rules": [] },
+    { "route": "/complete", "name": "신청 완료", "file": "uplus-day1-main/app/src/screens/CompletePage.tsx", "components": ["Header", "icon/arrowLeft", "icon/doneMark", "List/Row", "BottomCTA", "Button"], "states": [], "nav": [], "rules": [] }
+  ],
+  "conflicts": []
+}
