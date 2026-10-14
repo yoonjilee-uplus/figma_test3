@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { getSupabase } from "./supabase";
 import { makeSubscriptionId } from "./display.js";
 
 export const PRIVACY_VERSION = "2026-10-14";
@@ -35,6 +35,12 @@ export class SaveError extends Error {
 
 export async function saveSubscription(input: SubscriptionInput, reuseId?: string): Promise<string> {
   let id = reuseId || makeSubscriptionId(new Date(), []);
+  let supabase: ReturnType<typeof getSupabase>;
+  try {
+    supabase = getSupabase();
+  } catch (e) {
+    throw new SaveError(e instanceof Error ? e.message : "supabase unavailable", null);
+  }
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
@@ -71,7 +77,7 @@ export async function saveSubscription(input: SubscriptionInput, reuseId?: strin
 }
 
 export async function getSubscription(id: string): Promise<SubscriptionRow | null> {
-  const { data, error } = await supabase.rpc("get_subscription", { p_id: id });
+  const { data, error } = await getSupabase().rpc("get_subscription", { p_id: id });
   if (error) throw new Error(error.message);
   const rows = (data ?? []) as SubscriptionRow[];
   return rows.length > 0 ? rows[0] : null;

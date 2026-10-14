@@ -1,10 +1,52 @@
 {
-  "at": "2026-10-14T06:13:38.156Z",
+  "at": "2026-10-14T06:55:19.717Z",
   "screen": null,
   "pass": true,
   "gates": [
     {
+      "id": "G1",
+      "pass": true,
+      "back": "spec",
+      "issues": []
+    },
+    {
+      "id": "G2",
+      "pass": true,
+      "back": "pages",
+      "issues": []
+    },
+    {
+      "id": "G3",
+      "pass": true,
+      "back": "pages",
+      "issues": []
+    },
+    {
+      "id": "G4",
+      "pass": true,
+      "back": "screens",
+      "issues": []
+    },
+    {
+      "id": "G5",
+      "pass": true,
+      "back": "screens",
+      "issues": []
+    },
+    {
+      "id": "G6",
+      "pass": true,
+      "back": "screens",
+      "issues": []
+    },
+    {
       "id": "G7",
+      "pass": true,
+      "back": "screens",
+      "issues": []
+    },
+    {
+      "id": "G8",
       "pass": true,
       "back": "screens",
       "issues": []
