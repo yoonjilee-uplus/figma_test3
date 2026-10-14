@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import IconArrowLeft from "./IconArrowLeft";
 
 type HeaderProps = {
   Type?: "default" | "root";
@@ -25,15 +26,14 @@ export default function Header({ Type = "default", Title, left, onBack }: Header
           type="button"
           onClick={onBack}
           aria-label="이전으로"
-          className="ts-body-strong flex items-center justify-center"
+          className="flex items-center justify-center"
           style={{
             minWidth: "var(--spacing-40)",
             minHeight: "var(--spacing-40)",
-            color: "var(--color-icon-strong)",
             backgroundColor: "transparent",
           }}
         >
-          ←
+          <IconArrowLeft />
         </button>
       ) : (
         left
